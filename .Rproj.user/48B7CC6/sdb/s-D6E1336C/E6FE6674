@@ -1,0 +1,17 @@
+{
+    "contents" : "gauges = c(\n  #\n  # Clearwater\n  #\n  '13340000', #CLEARWATER RIVER AT OROFINO ID\n  # NF Clearwater at Ahsahka '13341000',   NO DISCHARGE, use DWO outflow\n  #\n  # Snake\n  #\n  '13334300', #SNAKE RIVER NEAR ANATONE, WA\n  '13344500', #TUCANNON RIVER NEAR STARBUCK, WA  - NO TEMP\n  '13351000', #PALOUSE RIVER AT HOOPER, WA       - NO TEMP\n  #\n  # Columbia\n  #\n  # Grand Coulee Downstream from DART\n  '12447200', # Okanogan\n  '12449950', # Methow\n  '12452500', # Chelan SPILLWAY - NO TEMP\n  '12462500', # Wnatchee - NO TEMP\n  '12472600', # Crab Creek CRAB CREEK NEAR BEVERLY \n  '12510500', # Yakima - NO TEMP\n  '14018500', # Walla Walla - NO TEMP\n  '14048000', # John Day  - NO TEMP\n  '14103000' # Deschutes \n)\n\ntemperature.gauges = c(\n  #### Tribs\n  #\n  # Clearwater\n  #\n  '13340000', #CLEARWATER RIVER AT OROFINO ID\n  '13341000', #NF Clearwater at Ahsahka\n  #\n  # Snake\n  #\n  '13334300', #SNAKE RIVER NEAR ANATONE, WA\n  # TUCANNON RIVER =  Washington DOE 35B060 = Continous?\n  # PALOUSE RIVER = Washington DOE 34A070 = Continous?\n  #\n  # Columbia\n  #\n  # Grand Coulee Downstream from DART\n  '12447200', # Okanogan\n  # Chelan River = Washtington DOE 47A070, needs to be estimated\n  # Wnatchee River = Washington DOE 45A070 = Continous?\n  # Crab Creek = Washtington DOE 41A070 = Continous\n  # Walla Walla  USGS 14018500  - needs to be estimated\n  # John Day River -Oregon DEQ 404065 ??? - probably needs to be estimated\n  '14103000' # Deschutes \n)\n\n",
+    "created" : 1470960437893.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "483956518",
+    "id" : "E6FE6674",
+    "lastKnownWriteTime" : 140735664722650,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

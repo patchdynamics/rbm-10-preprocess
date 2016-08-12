@@ -1,0 +1,19 @@
+site,limb,start,alpha,beta,gamma,mu,station
+Methow,rising,1,22,14.498,0.2007,0.5576,Wenatchee
+Methow,falling,30,22,12.906,0.1787,0.4964,Wenatchee
+Tucannon,rising,1,22,12.264,0.1698,0.4717,Lewiston
+Tucannon,falling,32,22,11.3406,0.157,0.4362,Lewiston
+Palouse,rising,1,28,14.2740,0.1976,0.549,Yakima
+Palouse,falling,30,28,14.7654,0.2044,0.5679,Yakima
+Chelan,rising,1,26,13.0000,0.1800,0.500,Wenatchee
+Chelan,falling,30,26,8.3590,0.1157,0.3215,Wenatchee
+Wenatchee,rising,1,23,16.5413,0.2290,0.6362,Wenatchee
+Wenatchee,falling,30,23,12.5088,0.1732,0.4811,Wenatchee
+Crab Creek,rising,1,26,11.2747,0.1561,0.4336,Wenatchee
+Crab Creek,falling,30,26,11.4084,0.1580,0.4388,Wenatchee
+Yakima,rising,1,28,12.7321,0.1763,0.4897,Yakima
+Yakima,falling,30,28,11.9158,0.165,0.4583,Yakima
+Walla Walla,rising,1,29,12.7334,0.1763,0.4897,Yakima
+Walla Walla,falling,30,29,11.6612,0.1615,0.4485,Yakima
+John Day,rising,1,29,13,0.1800,0.5000,Lewiston
+John Day,falling,32,29,12.3896,0.1715,0.4765,Lewiston

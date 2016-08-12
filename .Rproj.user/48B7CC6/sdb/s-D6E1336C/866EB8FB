@@ -1,0 +1,17 @@
+{
+    "contents" : "\ncloud.cover = brick('~/Downloads/tcdc.2015.nc')\nplot(cloud.cover[[5]])\n\nupward.short.wave = brick('~/Downloads/uswrf.sfc.2015.nc')\ndownward.short.wave = brick('~/Downloads/dswrf.2015.nc')\nplot(upward.short.wave[[1]])\nplot(downward.short.wave[[1]])\nplot(downward.short.wave[[1]] - upward.short.wave[[1]])",
+    "created" : 1470355865650.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "72105113",
+    "id" : "866EB8FB",
+    "lastKnownWriteTime" : 0,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

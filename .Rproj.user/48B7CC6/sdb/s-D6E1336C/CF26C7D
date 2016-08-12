@@ -1,0 +1,17 @@
+{
+    "contents" : "library(raster)\nrequire(rasterVis)\nlibrary(rgdal)\nlibrary(viridis)\n\n\nr.temp = raster('/Users/matthewxi/Downloads/air.sfc.2015 (1).nc', 80)\n\nstack.temp =  raster::stack('/Users/matthewxi/Downloads/air.sfc.2015 (1).nc')\n\n#animate(stack.temp[[1:50]], pause=0.1,n=2)\n\nzone = shapefile('../GIS/ApproxBasin/ApproxBasinPolyFull.shp')\ntemplate = raster('../GIS/air.2m.2015.nc', 1)\n\nzone.narr = spTransform(zone, crs(template))\nplot(zone.narr)\nplot(extent(zone.narr))\n\nzone.extent = extent(zone.narr)\nplot(crop(template, zone.extent))\n\n#air.2m = brick('../GIS/air.2m.2015.nc')\n#air.2m.columbia = crop(air.2m, zone.extent)\n#writeRaster(air.2m.columbia, '../GIS/air.2m.columbia')\nair.2m.columbia = brick('../GIS/air.2m.columbia.grd')\n\n\nrivers = shapefile('../GIS/Hydrography/MajorRivers.shp')\nplot(crop(template, zone.extent))\nrivers.narr = spTransform(rivers, crs(template))\nplot(rivers.narr, add=TRUE)\n\ndemo = crop(template, zone.extent) \nlevelplot(demo, col.regions = rev(terrain.colors(255)), cuts=254, margin=FALSE) +\n  layer(sp.points(rivers.narr, col = \"blue\"))\n\np <- as(zone.extent, 'SpatialPolygons')\ncrs(p) = crs(zone.narr)\nshapefile(p, filename='../GIS/zone.extent')\n\n# animate(air.2m.columbia[[1:50]], pause=0.1,n=2)\nnam = names(air.2m.columbia)\npalette = colorRampPalette(c(\"blue\", \"red\"))( 255 )\nfor(i in (205*8):(212*8)){\n  col.reaches = rep('blue',length(rivers.narr$HYDRO_))\n  col.reaches[rivers.narr$HYDRO_ == 8445] = 'red'\n  my.at <- seq(270, 320)\n  pl = levelplot(air.2m.columbia[[i]], \n                 col.regions =  palette,\n                 #cuts=254, \n                 main=nam[i],\n                 margin=FALSE, at = my.at) +\n    layer(sp.lines(rivers.narr, col = col.reaches))  \n  print(pl)\n  Sys.sleep(.1)\n}\n\n\n#pdf(\"name.pdf\")\n#print(levelplot(my_data))\n#dev.off()\n\nwater.temp = ts.data$Temperature..F.;\nnam = names(air.2m.columbia)\npalette = colorRampPalette(c(\"blue\", \"red\"))( 255 )\npalette.heat = rev(heat.colors(255))\npalette = viridis(255)\npalettet = adjustcolor(palette, alpha.f = 0.5) \nfor(i in (180*8):(210*8)){\n  col.reaches = rep('gray',length(rivers.narr$HYDRO_))\n  \n  day = floor(i / 8) # the day\n  hour = (i %% 8) * 3\n  wt.index = 24*day + hour\n  \n  wt = as.numeric(water.temp$Temperature..F.[wt.index])\n  print(water.temp$Temperature..F.[wt.index])\n  wt = 5 * (wt - 32) / 9\n  wt = floor(((wt-15)/10) * 255)\n  print(wt)\n  # 8445 Bonneville Area\n  # 8291 Ice Harbor Area\n  col.reaches[rivers.narr$HYDRO_ == 8445] = palette.heat[wt]\n  \n  my.at <- seq(273, 323)-273\n  pl = levelplot(air.2m.columbia[[i]]-273, \n                 col.regions =  palette,\n                 #cuts=254, \n                 main=nam[i],\n                 margin=FALSE, at = my.at) +\n    layer(sp.lines(rivers.narr, col = col.reaches, lwd=6))  \n  print(pl)\n  Sys.sleep(.1)\n}\n\n\n",
+    "created" : 1469743013881.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1251865076",
+    "id" : "CF26C7D",
+    "lastKnownWriteTime" : 1470092811,
+    "path" : "~/Documents/Projects/Columbia/R/TemperatureVis.R",
+    "project_path" : "TemperatureVis.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
