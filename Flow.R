@@ -218,7 +218,10 @@ temperatures.usgs = c()
 for(i in 1:length(temperature.gauges)){
   data = importDVs(temperature.gauges[i],code="00010", sdate=sdate, edate=edate)
   plotParam(data)
-  temperatures.usgs = cbind(temperatures.usgs, data$val)
+  ts = xts(data$val, order.by=data$dates)
+  names(ts) = 'Temperature'
+  ts = na.approx(ts)
+  temperatures.usgs = cbind(temperatures.usgs, as.numeric(ts$Temperature))
 }
 temperatures.usgs = data.frame(temperatures.usgs)
 names(temperatures.usgs) = temperature.gauges
@@ -331,24 +334,66 @@ write(paste0('****************** INPUT FILE - ADVECTION - FOR RBM10 ************
       file = filename, append=FALSE)
 write(paste0('******************          ADVECTED SOURCE DATA      ****************'),
       file = filename, append=TRUE)
-write(str_replace_all(paste(sdate, edate), '-', ''), file=filename, append=TRUE)
+formatted.dates = sprintf("%10s%10s", str_replace_all(sdate, '-', ''), str_replace_all(edate, '-', '') )
+write(formatted.dates, file=filename, append=TRUE)
 year =  year(sdate)
 for(d in 1:365){
   advection = advection.df[d,]
-  write.table(cbind(year, d, advection[,c('Clearwater', 'Clearwater.T', 'Snake', 'Snake.T', 'Columbia', 'Columbia.T')]),
-              file = filename, append = TRUE, sep='  ', col.name=FALSE, quote=FALSE, row.names=FALSE)
-  write(paste0('    ', 1, '    ', advection$NFClearwater, advection$NFClearwater.T), file = filename, append = TRUE)
-  write(paste0('    ', 3, '    ', advection$NFClearwater, advection$NFClearwater.T), file = filename, append = TRUE)
-  write(paste0('    ', 4, '    ', advection$Potlatch, advection$Potlatch.T), file = filename, append = TRUE)
-  write(paste0('    ', 5, '    ', advection$Tucannon, advection$Tucannon.T), file = filename, append = TRUE)
-  write(paste0('    ', 6, '    ', advection$Palouse, advection$Palouse.T), file = filename, append = TRUE)
-  write(paste0('    ', 7, '    ', advection$Okanogan, advection$Okanogan.T), file = filename, append = TRUE)
-  write(paste0('    ', 8, '    ', advection$Methow, advection$Methow.T), file = filename, append = TRUE)
-  write(paste0('    ', 9, '    ', advection$Chelan, advection$Chelan.T), file = filename, append = TRUE)
-  write(paste0('    ', 10, '    ', advection$Crab, advection$Crab.T), file = filename, append = TRUE)
-  write(paste0('    ', 11, '    ', advection$Yakima, advection$Yakima.T), file = filename, append = TRUE)
-  write(paste0('    ', 13, '    ', advection$WallaWalla, advection$WallaWalla.T), file = filename, append = TRUE)
-  write(paste0('    ', 13, '    ', advection$JohnDay, advection$JohnDay.T), file = filename, append = TRUE)
-  write(paste0('    ', 13, '    ', advection$Deschutes, advection$Deschutes.T), file = filename, append = TRUE)  
+  boundaries.numbers = as.numeric(cbind(year, d, advection[,c('Clearwater', 'Clearwater.T', 'Snake', 'Snake.T', 'Columbia', 'Columbia.T')]))
+  boundaries = sprintf('%5i%5i%10.0f%10.1f%10.0f%10.1f%10.0f%10.1f', 
+                       year, d, advection$Clearwater, advection$Clearwater.T, advection$Snake, advection$Snake.T, advection$Columbia, advection$Columbia.T )
+  write(boundaries, file=filename, append=TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 1, advection$NFClearwater, advection$NFClearwater.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 3, advection$Potlatch, advection$Potlatch.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 4, advection$Tucannon, advection$Tucannon.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 5, advection$Palouse, advection$Palouse.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 6, advection$Okanogan, advection$Okanogan.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 7, advection$Methow, advection$Methow.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 8, advection$Chelan, advection$Chelan.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 9, advection$Wenatchee, advection$Wenatchee.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 10, advection$Crab, advection$Crab.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 11, advection$Yakima, advection$Yakima.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 13, advection$WallaWalla, advection$WallaWalla.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 14, advection$JohnDay, advection$JohnDay.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 15, advection$Deschutes, advection$Deschutes.T), file = filename, append = TRUE)  
+}
+
+
+
+#
+# Write Advection Files for Scenario2
+#
+Columbia.T.Max = 13
+filename = '2015.Scenario2b.adv'
+write(paste0('****************** INPUT FILE - ADVECTION - FOR RBM10 ****************'),
+      file = filename, append=FALSE)
+write(paste0('******************          ADVECTED SOURCE DATA      ****************'),
+      file = filename, append=TRUE)
+formatted.dates = sprintf("%10s%10s", str_replace_all(sdate, '-', ''), str_replace_all(edate, '-', '') )
+write(formatted.dates, file=filename, append=TRUE)
+year =  year(sdate)
+for(d in 1:365){
+  advection = advection.df[d,]
+  Columbia.T = advection$Columbia.T
+  if(Columbia.T > Columbia.T.Max) {
+    Columbia.T = Columbia.T.Max
+  }
+  boundaries.numbers = as.numeric(cbind(year, d, advection[,c('Clearwater', 'Clearwater.T', 'Snake', 'Snake.T', 'Columbia', 'Columbia.T')]))
+  boundaries = sprintf('%5i%5i%10.0f%10.1f%10.0f%10.1f%10.0f%10.1f', 
+                       year, d, advection$Clearwater, advection$Clearwater.T, advection$Snake, advection$Snake.T, advection$Columbia, Columbia.T )
+  write(boundaries, file=filename, append=TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 1, advection$NFClearwater, advection$NFClearwater.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 3, advection$Potlatch, advection$Potlatch.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 4, advection$Tucannon, advection$Tucannon.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 5, advection$Palouse, advection$Palouse.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 6, advection$Okanogan, advection$Okanogan.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 7, advection$Methow, advection$Methow.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 8, advection$Chelan, advection$Chelan.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 9, advection$Wenatchee, advection$Wenatchee.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 10, advection$Crab, advection$Crab.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 11, advection$Yakima, advection$Yakima.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 13, advection$WallaWalla, advection$WallaWalla.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 14, advection$JohnDay, advection$JohnDay.T), file = filename, append = TRUE)
+  write(sprintf('%5i%10.1f%5.1f', 15, advection$Deschutes, advection$Deschutes.T), file = filename, append = TRUE)  
 }
 

@@ -16,6 +16,8 @@ plot(ts.bon['2015-06-01/2015-08-01']$Temperature..F.)
 
 ##
 bon = read.csv('../Data/2015/BON_2015_BonnevilleForebay.csv')
+dalles = read.csv('../Data/2015/TDDO_2015_TheDalles.csv')
+dallesforebay = read.csv('../Data/2015/TD_2015_TheDallesForebay.csv')
 ice = read.csv('../Data/2015/IDSW_2015_IceHarborTailwater.csv')
 ice2016 = read.csv('../Data/2016/IDSW_2016_IceHarborTailwater.csv')
 lgw = read.csv('../Data/2015/LWG_2015_LowerGraniteForebay.csv')
@@ -26,6 +28,8 @@ lmontail = read.csv('../Data/2015/LMNW_2015_LowerMonumentalTailwater.csv')
 lmontail2016 = read.csv('../Data/2016/LMNW_2016_LowerMonumentalTailwater.csv')
 lgstail = read.csv('../Data/2015/LGSW_2015_LittleGooseTailwater.csv')
 lgstail2016 = read.csv('../Data/2016/LGSW_2016_LittleGooseTailwater.csv')
+wells = read.csv('../Data/2015/WEL_2015_Wells.csv')
+rockyreachtail = read.csv('../Data/2015/RRDW_2015_RockyReachTailwater.csv')
 
 # load from URL
 url = 'http://www.cbr.washington.edu/dart/cs/php/rpt/wqm_hourly.php?sc=1&outputFormat=csv&year=2015&proj=LMNW&startdate=01%2F01&days=365'
@@ -62,6 +66,14 @@ temp.timeseries = function(data) {
   return(ts.data)
 }
 
+temp.timeseries.daily = function(data) {
+  ts.data = temp.timeseries(data)
+  ts.data$Day = .indexyday(ts.data)
+  data.daily = ddply(as.data.frame(ts.data), c('Day'), summarize, daily.T = mean(Temperature..C.))
+  return(data.daily)
+}
+
+ts.bon = temp.timeseries(bon)
 ts.ice = temp.timeseries(ice)
 ts.lgw = temp.timeseries(lgw)
 ts.dwo = temp.timeseries(dwo)
@@ -83,6 +95,8 @@ plot(ts.ice['2015-05-01/2015-10-01']$Temperature..F., ylim=c(60,75))
 lines(ts.lgw['2015-05-01/2015-10-01']$Temperature..F., col='blue')
 legend('topleft', c('Ice Harbor Tailwater', 'Lower Granite Forebay'), col=c('black', 'blue'), lwd=1)
 
+# summer
+# range = .indexyday(ts.lgtail) >= 150 & .indexyday(ts.lgtail) <= 250
 
 plot(ts.lgtail[range]$Temperature..F., ylim=c(55, 75), main='Temperature 2015')
 lines(ts.lgstail[range]$Temperature..F., col='blue')
@@ -91,6 +105,16 @@ lines(ts.ice[range]$Temperature..F., col='orange')
 legend('topleft', 
        c('Granite', 'Goose', 'Monumental', 'Ice'), 
        col=c('black', 'blue', 'green', 'orange'), lwd=1)
+
+
+plot(ts.lgtail[range]$Temperature..C., ylim=c(0, 30), main='Temperature 2015')
+lines(ts.lgstail[range]$Temperature..C., col='blue')
+lines(ts.lmontail[range]$Temperature..C., col='green')
+lines(ts.ice[range]$Temperature..C., col='orange')
+legend('topleft', 
+       c('Granite', 'Goose', 'Monumental', 'Ice'), 
+       col=c('black', 'blue', 'green', 'orange'), lwd=1)
+
 
 
 

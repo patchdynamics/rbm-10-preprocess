@@ -42,6 +42,21 @@ clouds.values = raster::extract(clouds, station.locations)
 # 1: process first order data into HOT file format
 #
 
+
+write.hot.file = function(df, filename, station.name, station.elevation, station.latitude, station.longitude, start, end) {
+  write(paste0('****************** INPUT FILE - ',filename,' - FOR RBM10 ****************'),
+        file = filename, append=FALSE)
+  write(paste0('******************           WEATHER STATION DATA        ****************'),
+        file = filename, append=TRUE)
+  write(station.name, file = filename, append=TRUE)
+  station.info = c(1,station.elevation, station.latitude, station.longitude, start, end)
+  formatted.station.info = sprintf("%10s", station.info)
+  write.table(t(formatted.station.info), file = filename, append = TRUE, sep='', col.name=FALSE, quote=FALSE, row.names=FALSE)
+  formatted.df = sprintf("%5i%10.5f%10.5f%10.5f%10.5f%10.5f%10.5f%10.5f", df$Julian, df$Solar, df$Atmospheric, df$AirTemperature, df$Wind, df$Bowen, df$VaporPressure, df$PhotoPeriod)
+  write(formatted.df, file=filename, append=TRUE)
+}
+
+
 primary.stations = list()
 
 for(station.index in 1:2) {
@@ -71,10 +86,11 @@ if(station.index == 1) {
   
 }
 
-
+# elevations
 # yakima = 1068 ft file says 1063
 # richland = 373 ft , plus 15 ft possibly? file says 2000
 # WNATCHEE = 626 ft   file says 1000
+
 air.temperature = as.numeric(levels(station.data$Tavg))[station.data$Tavg]
 air.temperature = na.interp(air.temperature)
 air.temperature.C = (air.temperature-32)*(5/9)
@@ -135,19 +151,12 @@ df$VaporPressure = 6.11 * exp( 17.27 * dewpoint / (237.3 + air.temperature.C))
 df$PhotoPeriod = 0 # Not used in the model.
 
 
-primary.stations[[station.index]] = df
+  primary.stations[[station.index]] = df
+  n = names(df)
+  n[1] = 'Julian'
+  names(df) = n
 
-write.hot.file = function(df, filename, station.name, station.elevation, station.latitude, station.longitude, start, end) {
-  write(paste0('****************** INPUT FILE - ',filename,' - FOR RBM10 ****************'),
-      file = filename, append=FALSE)
-  write(paste0('******************           WEATHER STATION DATA        ****************'),
-      file = filename, append=TRUE)
-  write(station.name, file = filename, append=TRUE)
-  station.info = c('',1,station.elevation, station.latitude, station.longitude, start, end)
-  write.table(t(station.info), file = filename, append = TRUE, sep='  ', col.name=FALSE, quote=FALSE, row.names=FALSE)
-  write.table(df, file=filename, append=TRUE, sep='  ', col.name=FALSE, quote=FALSE, row.names=FALSE)
-}
-
+  write.hot.file(df, filename, station.name, station.elevation, station.latitude, station.longitude, start, end)
 }
 
 # 2: create average T from Tmax and Tmin for non-first order stations
@@ -203,7 +212,10 @@ df$Bowen = bowen.ratio(station.elevation, air.temperature.C)
 # the synthesis of vapor pressure from 1st order data might not be reliable, 
 # since temperatures between stations can be quite different
 
-df = round(df, 6)
+n = names(df)
+n[1] = 'Julian'
+names(df) = n
+
 write.hot.file(df, filename, station.name, station.elevation, station.latitude, station.longitude, start, end)
   
 }
