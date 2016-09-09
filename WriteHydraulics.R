@@ -1,12 +1,14 @@
 
 snake.hydraulics = read.csv('../Data/Hydraulics/SnakeHydraulics.csv')
+columbia.hydraulics = read.csv('../Data/Hydraulics/ColumbiaHydraulics.csv')
+process.hydraulics = columbia.hydraulics
 
 # Segment Description
 #FORMAT(7X,a20,5x,a5,10x,3f5.0)
-filename = 'Snake.Hydraulics.txt'
+filename = 'Columbia.Hydraulics.txt'
 write('', file=filename) # clear the file
-for(i in 1:nrow(snake.hydraulics)){
-  hydraulics = snake.hydraulics[i,]
+for(i in 1:nrow(process.hydraulics)){
+  hydraulics = process.hydraulics[i,]
   write( sprintf('R21.L1 %10s     %5s          %5.1f%5.1f%5.1f',     # .1 is diff from FORTRAN file (?)
                 'Snake River', 'RIVER', hydraulics$RM.Begin, hydraulics$RM.End, hydraulics$Elevation),
          file=filename, append=TRUE )

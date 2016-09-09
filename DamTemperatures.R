@@ -20,6 +20,7 @@ dalles = read.csv('../Data/2015/TDDO_2015_TheDalles.csv')
 dallesforebay = read.csv('../Data/2015/TD_2015_TheDallesForebay.csv')
 ice = read.csv('../Data/2015/IDSW_2015_IceHarborTailwater.csv')
 ice2016 = read.csv('../Data/2016/IDSW_2016_IceHarborTailwater.csv')
+ice1995 = read.csv('../Data/1995/IDSW_IceHarbor_Tailwater.csv')
 lgw = read.csv('../Data/2015/LWG_2015_LowerGraniteForebay.csv')
 lgtail = read.csv('../Data/2015/LGNW_2015_LowerGraniteTailwater.csv')
 lgtail2016 = read.csv('../Data/2016/LGNW_2016_LowerGraniteTailwater.csv')
@@ -30,7 +31,12 @@ lgstail = read.csv('../Data/2015/LGSW_2015_LittleGooseTailwater.csv')
 lgstail2016 = read.csv('../Data/2016/LGSW_2016_LittleGooseTailwater.csv')
 wells = read.csv('../Data/2015/WEL_2015_Wells.csv')
 rockyreachtail = read.csv('../Data/2015/RRDW_2015_RockyReachTailwater.csv')
+priesttail = read.csv('../Data/2015/PRXW_2015_PriestRapidsDownstream.csv')
+priesttail.1995 = read.csv('../Data/1995/PRXW_PriestRapids_Tailwater.csv')
 
+johndaytail = read.csv('../Data/2015/JHAW_2015_JohnDayTailwater.csv')
+mcnarytail = read.csv('../Data/2015/MCPW_2015_McNaryTailwater.csv')
+mcnarytail.1995 =read.csv('../Data/1995/MCPW_McNary_Tailwater.csv')
 # load from URL
 url = 'http://www.cbr.washington.edu/dart/cs/php/rpt/wqm_hourly.php?sc=1&outputFormat=csv&year=2015&proj=LMNW&startdate=01%2F01&days=365'
 read.csv(url)
@@ -115,6 +121,71 @@ legend('topleft',
        c('Granite', 'Goose', 'Monumental', 'Ice'), 
        col=c('black', 'blue', 'green', 'orange'), lwd=1)
 
+
+bon.daily = temp.timeseries.daily(bon)
+lgtail.daily = temp.timeseries.daily(ts.lgtail)
+lgstail.daily = temp.timeseries.daily(ts.lgstail)
+lmontail.daily = temp.timeseries.daily(ts.lmontail)
+ice.daily = temp.timeseries.daily(ts.ice)
+mcnary.daily = temp.timeseries.daily(temp.timeseries(mcnarytail))
+johnday.daily = temp.timeseries.daily(johndaytail)
+
+
+mymonths <- c("Jun",
+              "Jul","Aug","Sep"
+              )
+myticks = c(152, 182, 213, 244)
+
+width = 480
+height = 480
+png(filename = "lg.obs.png", width = width, height = height)
+par(mar = c(5, 5, 4, 2)) 
+plot(lgtail.daily[150:250,]$daily.T*9/5 + 32, typ='l', ylim=c(55,75), 
+     ylab='Temperature (F)', col='blue', lwd=2, xaxt='n',  xlab='', cex.axis=1.6, cex.lab=1.6)
+axis(1, at=myticks-150, labels=mymonths, cex.axis=1.6)
+legend('bottomright', c('Lower Granite'),
+       lwd=2, col=c('blue'), cex=1.6
+)
+dev.off()
+
+png(filename = "lgs.obs.png", width = width, height = height)
+par(mar = c(5, 5, 4, 2)) 
+plot(lgstail.daily[150:250,]$daily.T*9/5 + 32, typ='l', ylim=c(55,75), ylab='Temperature (F)', col='green', lwd=2, xaxt='n', xlab='', cex.axis=1.6, cex.lab=1.6)
+axis(1, at=myticks-150, labels=mymonths, cex.axis=1.6)
+legend('bottomright', c('Little Goose'),
+       lwd=2, col=c('green'), cex=1.6
+)
+dev.off()
+
+png(filename = "lmon.obs.png", width = width, height = height)
+par(mar = c(5, 5, 4, 2)) 
+plot(lmontail.daily[150:250,]$daily.T*9/5 + 32, typ='l', ylim=c(55,75), ylab='Temperature (F)', col='orange', lwd=2, xaxt='n', xlab='', cex.axis=1.6, cex.lab=1.6)
+axis(1, at=myticks-150, labels=mymonths, cex.axis=1.6)
+legend('bottomright', c('Lower Monumental'),
+       lwd=2, col=c('orange2'), cex=1.6
+)
+dev.off()
+
+png(filename = "ice.obs.png", width = width, height = height)
+par(mar = c(5, 5, 4, 2)) 
+plot(ice.daily[150:250,]$daily.T*9/5 + 32, typ='l', ylim=c(55,75), ylab='Temperature (F)', col='red', lwd=2, xaxt='n', xlab='', cex.axis=1.6, cex.lab=1.6)
+axis(1, at=myticks-150, labels=mymonths, cex.axis=1.6)
+legend('bottomright', c('Ice Harbor'),
+       lwd=2, col=c('red'), cex=1.6
+)
+dev.off()
+
+png(filename = "all.obs.png", width = width, height = height)
+par(mar = c(5, 5, 4, 2)) 
+plot(lgtail.daily[150:250,]$daily.T*9/5 + 32, typ='l', ylim=c(55,75), ylab='Temperature (F)', col='blue', lwd=2, xaxt='n', xlab='', cex.axis=1.6, cex.lab=1.6)
+axis(1, at=myticks-150, labels=mymonths, cex.axis=1.6)
+lines(lgstail.daily[150:250,]$daily.T*9/5 + 32, lwd=2,  col='green')
+lines(lmontail.daily[150:250,]$daily.T*9/5 + 32,lwd=2, col='orange')
+lines(ice.daily[150:250,]$daily.T*9/5 + 32, lwd=2, col='red')
+legend('bottomright', c('Lower Granite', 'Little Goose', 'Lower Monumental', 'Ice Harbor'),
+       lwd=2, col=c('blue', 'green', 'orange2', 'red'), cex=1.2
+       )
+dev.off()
 
 
 
