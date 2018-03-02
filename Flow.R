@@ -3,6 +3,9 @@ library('waterData')
 library('plyr')
 library('dataRetrieval')
 library('lubridate')
+library('forecast')
+library('stringr')
+library('xts')
 
 
 # DWO vs DWR

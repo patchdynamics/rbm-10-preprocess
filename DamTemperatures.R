@@ -84,6 +84,8 @@ ts.ice = temp.timeseries(ice)
 ts.lgw = temp.timeseries(lgw)
 ts.dwo = temp.timeseries(dwo)
 ts.lgtail = temp.timeseries(lgtail)
+ts.lgfore = temp.timeseries(lgw)
+
 ts.lmontail = temp.timeseries(lmontail)
 ts.lgstail = temp.timeseries(lgstail)
 
@@ -124,7 +126,10 @@ legend('topleft',
 
 bon.daily = temp.timeseries.daily(bon)
 lgtail.daily = temp.timeseries.daily(ts.lgtail)
+lgfore.daily = temp.timeseries.daily(ts.lgfore)
+
 lgstail.daily = temp.timeseries.daily(ts.lgstail)
+
 lmontail.daily = temp.timeseries.daily(ts.lmontail)
 ice.daily = temp.timeseries.daily(ts.ice)
 mcnary.daily = temp.timeseries.daily(temp.timeseries(mcnarytail))
